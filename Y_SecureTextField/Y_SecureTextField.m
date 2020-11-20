@@ -9,7 +9,7 @@
 #import "Y_SecureTextField.h"
 
 static const CGFloat cursorW = 2.f;/**<光标宽度 */
-@interface Y_SecureTextField ()<UITextFieldDelegate, UIGestureRecognizerDelegate>
+@interface Y_SecureTextField ()
 
 @property (nonatomic, strong) NSMutableString   *innerText;
 @property (nonatomic, strong) CAShapeLayer      *cursorLayer;
@@ -63,7 +63,6 @@ static const CGFloat cursorW = 2.f;/**<光标宽度 */
 }
 
 - (void)setupUI {
-    self.delegate = self;
     self.font = [UIFont systemFontOfSize:17];
     self.tintColor = [UIColor clearColor];
     self.textColor = [UIColor clearColor];
@@ -187,6 +186,19 @@ static const CGFloat cursorW = 2.f;/**<光标宽度 */
         dotLay.path = [self circlePathWithCenter:CGPointMake(dotLay.frame.size.width/2.0, dotLay.frame.size.height/2.0)].CGPath;
     }];
     [self setNeedsLayout];
+}
+
+- (void)setFocusBorderColor:(UIColor *)focusBorderColor {
+    if (!focusBorderColor) {
+        return;
+    }
+    _focusBorderColor = focusBorderColor;
+    [_boxLayers enumerateObjectsUsingBlock:^(CAShapeLayer *boxLay, NSUInteger idx, BOOL * _Nonnull stop) {
+        boxLay.borderColor = self.borderLineColor.CGColor;
+        if (self.text.length == idx) {
+            boxLay.borderColor = self.focusBorderColor.CGColor;
+        }
+    }];
 }
 
 - (void)layoutSubviews {
@@ -330,16 +342,13 @@ static const CGFloat cursorW = 2.f;/**<光标宽度 */
     [_subTextLayers removeLastObject];
 }
 
-#pragma mark - ===== UITextFieldDelegate =====
-- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
-    return (self.codeLength >= textField.text.length + string.length);
-}
-
+#pragma mark - ===== event =====
 - (void)textFieldValueChanged:(UITextField *)sender {
     BOOL inputEnd = NO;
     // 加字
     if (self.innerText.length < sender.text.length) {
         if (self.innerText.length == _codeLength) {
+            self.text = [NSString stringWithString:self.innerText];
             return;
         }
         self.innerText = [NSMutableString stringWithString:sender.text];
@@ -350,6 +359,7 @@ static const CGFloat cursorW = 2.f;/**<光标宽度 */
     // 减字
     else if (self.innerText.length > sender.text.length) {
         if (self.innerText.length == 0) {
+            self.text = nil;
             return;
         }
         inputEnd = NO;
@@ -358,7 +368,7 @@ static const CGFloat cursorW = 2.f;/**<光标宽度 */
         [self deleteText];
         self.innerText = [NSMutableString stringWithString:sender.text];
     }
-    
+    [self setFocusBorderColor:self.focusBorderColor];
     if (self.textChangeBlock) {
         self.textChangeBlock(self, inputEnd);
     }

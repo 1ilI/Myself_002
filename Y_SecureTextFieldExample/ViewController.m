@@ -26,6 +26,8 @@
 @property (nonatomic, strong) UISegmentedControl    *dotColorControl;
 @property (nonatomic, strong) UILabel               *textColorLab;
 @property (nonatomic, strong) UISegmentedControl    *textColorControl;
+@property (nonatomic, strong) UILabel               *focusBorderColorLab;
+@property (nonatomic, strong) UISegmentedControl    *focusBorderColorControl;
 @property (nonatomic, strong) UILabel               *boxSpaceLab;
 @property (nonatomic, strong) UISlider              *boxSpaceSlider;
 @property (nonatomic, strong) UILabel               *dotRadiuLab;
@@ -55,6 +57,8 @@
     [self.view addSubview:self.dotColorControl];
     [self.view addSubview:self.textColorLab];
     [self.view addSubview:self.textColorControl];
+    [self.view addSubview:self.focusBorderColorLab];
+    [self.view addSubview:self.focusBorderColorControl];
 }
 
 - (void)inputTextFieldChanged:(Y_SecureTextField *)sender isComplete:(BOOL)isComplete {
@@ -84,6 +88,8 @@
     self.dotColorControl.frame = CGRectMake(90, 390, width - 100, 30);
     self.textColorLab.frame = CGRectMake(0, 430, 80, 30);
     self.textColorControl.frame = CGRectMake(90, 430, width - 100, 30);
+    self.focusBorderColorLab.frame = CGRectMake(0, 470, 80, 30);
+    self.focusBorderColorControl.frame = CGRectMake(90, 470, width - 100, 30);
 }
 
 #pragma mark - ===== event =====
@@ -132,6 +138,9 @@
     }
     else if (sender == _textColorControl) {
         _inputTextField.textFillColor = color;
+    }
+    else if (sender == _focusBorderColorControl) {
+        _inputTextField.focusBorderColor = color;
     }
 }
 
@@ -320,4 +329,21 @@
     }
     return _textColorControl;
 }
+
+- (UILabel *)focusBorderColorLab {
+    if (!_focusBorderColorLab) {
+        _focusBorderColorLab = [self createLabelWithTitle:@"焦点边框颜色"];
+        _focusBorderColorLab.adjustsFontSizeToFitWidth = YES;
+    }
+    return _focusBorderColorLab;
+}
+
+- (UISegmentedControl *)focusBorderColorControl {
+    if (!_focusBorderColorControl) {
+        _focusBorderColorControl = [self createSegmentedControlWithItems:ColorsStrArr];
+        [_focusBorderColorControl addTarget:self action:@selector(changeColorWithControl:) forControlEvents:UIControlEventValueChanged];
+    }
+    return _focusBorderColorControl;
+}
+
 @end

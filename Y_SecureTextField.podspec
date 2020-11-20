@@ -2,12 +2,12 @@ Pod::Spec.new do |s|
   #名称
   s.name         = "Y_SecureTextField"
   #版本
-  s.version      = "0.0.1"
+  s.version      = "0.0.2"
   #简介
   s.summary      = "验证码/密码输入框"
   #详介
   s.description  = <<-DESC
-  指定验证码/密码位数，每一位值有方框框起来的输入框
+  类似支付宝验证码输入框，指定验证码/密码位数，每一位值有方框框起来的输入框
                    DESC
   #首页
   s.homepage     = "https://github.com/1ilI/Y_SecureTextField"

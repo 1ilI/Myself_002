@@ -74,6 +74,11 @@ typedef void(^InputTextChanged)(Y_SecureTextField *sender, BOOL isComplete);
 @property (strong, nonatomic) UIColor *cursorColor;
 
 /**
+ 焦点所在边框颜色，默认 nil，若有值则焦点边框显示对应颜色
+ */
+@property (strong, nonatomic) UIColor *focusBorderColor;
+
+/**
  输入文字改变的回调
  */
 @property (copy, nonatomic) InputTextChanged textChangeBlock;
